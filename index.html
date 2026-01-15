@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#1a1a1a">
+  <meta name="description" content="WLED Glow - A simple, beautiful app to control your WLED LED lights">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="WLED Glow">
+
+  <title>WLED Glow</title>
+
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icons/icon.svg">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app">
+    <!-- Header -->
+    <header class="header">
+      <h1 class="header-title">WLED Glow</h1>
+      <div class="header-status">
+        <span id="demo-badge" class="demo-badge hidden">Demo</span>
+        <span id="connection-indicator" class="connection-indicator"></span>
+        <button id="settings-btn" class="icon-btn" aria-label="Settings">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Home Screen -->
+      <section id="screen-home" class="screen active">
+        <!-- Power Button -->
+        <div class="power-section">
+          <button id="power-btn" class="power-btn" aria-label="Toggle power">
+            <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18.36 6.64a9 9 0 1 1-12.73 0"></path>
+              <line x1="12" y1="2" x2="12" y2="12"></line>
+            </svg>
+          </button>
+          <span id="power-label" class="power-label">OFF</span>
+        </div>
+
+        <!-- Brightness Slider -->
+        <div class="control-section">
+          <label class="control-label">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <span>Brightness</span>
+            <span id="brightness-value" class="control-value">100%</span>
+          </label>
+          <input type="range" id="brightness-slider" class="slider" min="0" max="255" value="128">
+        </div>
+
+        <!-- Quick Colors -->
+        <div class="section">
+          <h2 class="section-title">Quick Colors</h2>
+          <div class="color-swatches" id="color-swatches">
+            <button class="color-swatch" data-color="255,180,107" aria-label="Warm White" style="background: rgb(255,180,107)"></button>
+            <button class="color-swatch" data-color="255,255,255" aria-label="Cool White" style="background: rgb(255,255,255)"></button>
+            <button class="color-swatch" data-color="255,0,0" aria-label="Red" style="background: rgb(255,0,0)"></button>
+            <button class="color-swatch" data-color="255,120,0" aria-label="Orange" style="background: rgb(255,120,0)"></button>
+            <button class="color-swatch" data-color="255,255,0" aria-label="Yellow" style="background: rgb(255,255,0)"></button>
+            <button class="color-swatch" data-color="0,255,0" aria-label="Green" style="background: rgb(0,255,0)"></button>
+            <button class="color-swatch" data-color="0,150,255" aria-label="Blue" style="background: rgb(0,150,255)"></button>
+            <button class="color-swatch" data-color="150,0,255" aria-label="Purple" style="background: rgb(150,0,255)"></button>
+            <button class="color-swatch" data-color="255,0,150" aria-label="Pink" style="background: rgb(255,0,150)"></button>
+          </div>
+        </div>
+
+        <!-- Quick Effects -->
+        <div class="section">
+          <h2 class="section-title">Quick Effects</h2>
+          <div class="quick-effects" id="quick-effects">
+            <button class="effect-chip" data-effect="0">Solid</button>
+            <button class="effect-chip" data-effect="9">Rainbow</button>
+            <button class="effect-chip" data-effect="2">Breathe</button>
+            <button class="effect-chip" data-effect="66">Fire</button>
+            <button class="effect-chip" data-effect="43">Rain</button>
+            <button class="effect-chip" data-effect="42">Fireworks</button>
+          </div>
+        </div>
+
+        <!-- Favorites -->
+        <div class="section" id="favorites-section">
+          <h2 class="section-title">Favorites</h2>
+          <div class="favorites-row" id="favorites-row">
+            <p class="empty-state">No favorites yet. Save your favorite looks!</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Colors Screen -->
+      <section id="screen-colors" class="screen">
+        <h2 class="screen-title">Colors</h2>
+
+        <!-- Color Wheel -->
+        <div class="color-wheel-container">
+          <canvas id="color-wheel" width="280" height="280"></canvas>
+          <div id="color-picker-cursor" class="color-picker-cursor"></div>
+        </div>
+
+        <!-- Current Color Preview -->
+        <div class="color-preview-section">
+          <div id="current-color-preview" class="current-color-preview"></div>
+          <span id="current-color-hex" class="color-hex">#FFFFFF</span>
+        </div>
+
+        <!-- White Temperature -->
+        <div class="control-section">
+          <label class="control-label">
+            <span>White Temperature</span>
+          </label>
+          <div class="temp-slider-container">
+            <span class="temp-label">Warm</span>
+            <input type="range" id="temp-slider" class="slider temp-slider" min="0" max="100" value="50">
+            <span class="temp-label">Cool</span>
+          </div>
+        </div>
+
+        <!-- Recent Colors -->
+        <div class="section">
+          <h2 class="section-title">Recent Colors</h2>
+          <div class="color-swatches" id="recent-colors">
+            <p class="empty-state">Your recent colors will appear here</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Effects Screen -->
+      <section id="screen-effects" class="screen">
+        <h2 class="screen-title">Effects</h2>
+
+        <!-- Category Filter -->
+        <div class="category-tabs">
+          <button class="category-tab active" data-category="all">All</button>
+          <button class="category-tab" data-category="simple">Simple</button>
+          <button class="category-tab" data-category="relaxing">Relaxing</button>
+          <button class="category-tab" data-category="energetic">Energetic</button>
+          <button class="category-tab" data-category="nature">Nature</button>
+          <button class="category-tab" data-category="party">Party</button>
+        </div>
+
+        <!-- Effects Grid -->
+        <div class="effects-grid" id="effects-grid">
+          <!-- Effects will be populated by JavaScript -->
+        </div>
+
+        <!-- Effect Controls -->
+        <div class="effect-controls" id="effect-controls">
+          <div class="control-section">
+            <label class="control-label">
+              <span>Speed</span>
+              <span id="speed-value" class="control-value">50%</span>
+            </label>
+            <input type="range" id="speed-slider" class="slider" min="0" max="255" value="128">
+          </div>
+          <div class="control-section">
+            <label class="control-label">
+              <span>Intensity</span>
+              <span id="intensity-value" class="control-value">50%</span>
+            </label>
+            <input type="range" id="intensity-slider" class="slider" min="0" max="255" value="128">
+          </div>
+        </div>
+      </section>
+
+      <!-- Saved Screen -->
+      <section id="screen-saved" class="screen">
+        <h2 class="screen-title">Saved</h2>
+
+        <!-- Save Current Button -->
+        <button id="save-current-btn" class="save-btn">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          Save Current Look
+        </button>
+
+        <!-- My Favorites -->
+        <div class="section">
+          <h2 class="section-title">My Favorites</h2>
+          <div class="saved-list" id="saved-favorites">
+            <p class="empty-state">No favorites saved yet</p>
+          </div>
+        </div>
+
+        <!-- Device Presets -->
+        <div class="section">
+          <h2 class="section-title">Device Presets</h2>
+          <div class="saved-list" id="device-presets">
+            <p class="empty-state">Connect to a device to see presets</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Screen -->
+      <section id="screen-settings" class="screen">
+        <h2 class="screen-title">Settings</h2>
+
+        <!-- Device Connection -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">Device Connection</h3>
+
+          <div class="form-group">
+            <label for="device-ip">WLED Device IP Address</label>
+            <input type="text" id="device-ip" class="text-input" placeholder="192.168.1.100" autocomplete="off">
+          </div>
+
+          <div class="connection-status" id="connection-status">
+            <span class="status-indicator disconnected"></span>
+            <span class="status-text">Not connected</span>
+          </div>
+
+          <button id="test-connection-btn" class="btn btn-secondary">Test Connection</button>
+        </div>
+
+        <!-- Device Info -->
+        <div class="settings-card" id="device-info-card">
+          <h3 class="settings-card-title">Device Info</h3>
+          <div class="device-info">
+            <div class="info-row">
+              <span class="info-label">Name</span>
+              <span class="info-value" id="info-name">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">WLED Version</span>
+              <span class="info-value" id="info-version">-</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">LED Count</span>
+              <span class="info-value" id="info-leds">-</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Demo Mode -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">Demo Mode</h3>
+          <p class="settings-description">Try the app without real hardware</p>
+
+          <label class="toggle-label">
+            <input type="checkbox" id="demo-mode-toggle" class="toggle-input">
+            <span class="toggle-switch"></span>
+            <span>Enable Demo Mode</span>
+          </label>
+        </div>
+
+        <!-- About -->
+        <div class="settings-card">
+          <h3 class="settings-card-title">About</h3>
+          <p class="settings-description">WLED Glow v1.0</p>
+          <p class="settings-description">A simple, beautiful app to control your WLED LED lights.</p>
+          <a href="https://kno.wled.ge/" target="_blank" rel="noopener" class="link">Learn more about WLED</a>
+        </div>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+      <button class="nav-item active" data-screen="home" aria-label="Home">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+          <polyline points="9 22 9 12 15 12 15 22"></polyline>
+        </svg>
+        <span>Home</span>
+      </button>
+      <button class="nav-item" data-screen="colors" aria-label="Colors">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="13.5" cy="6.5" r="2.5"></circle>
+          <circle cx="17.5" cy="10.5" r="2.5"></circle>
+          <circle cx="8.5" cy="7.5" r="2.5"></circle>
+          <circle cx="6.5" cy="12.5" r="2.5"></circle>
+          <path d="M12 22a9 9 0 0 0 9-9c0-2.5-1-5-3-7a15.4 15.4 0 0 0-6-4 15.4 15.4 0 0 0-6 4c-2 2-3 4.5-3 7a9 9 0 0 0 9 9z"></path>
+        </svg>
+        <span>Colors</span>
+      </button>
+      <button class="nav-item" data-screen="effects" aria-label="Effects">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+        </svg>
+        <span>Effects</span>
+      </button>
+      <button class="nav-item" data-screen="saved" aria-label="Saved">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+        </svg>
+        <span>Saved</span>
+      </button>
+    </nav>
+
+    <!-- First Launch Modal -->
+    <div id="first-launch-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 class="modal-title">Welcome to WLED Glow!</h2>
+        <p class="modal-text">Control your LED lights with a simple, beautiful interface.</p>
+        <p class="modal-text">No WLED device yet? Try Demo Mode to explore the app!</p>
+        <div class="modal-actions">
+          <button id="try-demo-btn" class="btn btn-primary">Try Demo Mode</button>
+          <button id="setup-device-btn" class="btn btn-secondary">Set Up Device</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Save Favorite Modal -->
+    <div id="save-modal" class="modal hidden">
+      <div class="modal-content">
+        <h2 class="modal-title">Save Current Look</h2>
+        <div class="form-group">
+          <label for="favorite-name">Name</label>
+          <input type="text" id="favorite-name" class="text-input" placeholder="Movie Night" autocomplete="off">
+        </div>
+        <div class="modal-actions">
+          <button id="cancel-save-btn" class="btn btn-secondary">Cancel</button>
+          <button id="confirm-save-btn" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/api.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    // Register service worker
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('sw.js')
+        .then(reg => console.log('Service Worker registered'))
+        .catch(err => console.log('Service Worker registration failed:', err));
+    }
+  </script>
+</body>
+</html>
