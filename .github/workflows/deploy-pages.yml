@@ -16,9 +16,13 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Prepare files
+        run: |
+          mkdir -p dist
+          cp -r index.html css js icons manifest.json sw.js .nojekyll README.md dist/
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
-          exclude_assets: '.github,wled-glow-overview.md,wled-pwa-prd.md'
+          publish_dir: ./dist
