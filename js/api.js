@@ -125,7 +125,12 @@ const EFFECT_DATA = {
 class WLEDApi {
   constructor() {
     this.deviceIp = localStorage.getItem('wled_device_ip') || '';
-    this.demoMode = localStorage.getItem('wled_demo_mode') === 'true';
+    // Default to demo mode ON if not explicitly set
+    const storedDemoMode = localStorage.getItem('wled_demo_mode');
+    this.demoMode = storedDemoMode === null ? true : storedDemoMode === 'true';
+    if (storedDemoMode === null) {
+      localStorage.setItem('wled_demo_mode', 'true');
+    }
     this.connected = false;
     this.state = this.getDefaultState();
     this.listeners = [];

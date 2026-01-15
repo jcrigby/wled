@@ -74,12 +74,12 @@
 
   // Initialize application
   function init() {
-    // Check for first launch
+    // Check for first launch - skip modal since demo mode is on by default
     const hasLaunched = localStorage.getItem('wled_has_launched');
     const deviceIp = localStorage.getItem('wled_device_ip');
-    const demoMode = localStorage.getItem('wled_demo_mode') === 'true';
 
-    if (!hasLaunched && !deviceIp && !demoMode) {
+    // Only show first launch modal if demo mode is off and no device configured
+    if (!hasLaunched && !deviceIp && !wledApi.isDemoMode()) {
       showFirstLaunchModal();
     }
 
