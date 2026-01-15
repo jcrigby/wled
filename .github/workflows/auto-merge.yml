@@ -26,6 +26,8 @@ jobs:
 
       - name: Merge to main
         run: |
+          git fetch origin main
           git checkout main
+          git reset --hard origin/main
           git merge --no-ff ${{ github.ref_name }} -m "Auto-merge ${{ github.ref_name }} to main"
           git push origin main
